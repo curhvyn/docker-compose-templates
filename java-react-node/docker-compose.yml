@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  frontend:
+    image: react-frontend
+    build: 
+      context: ./react
+    ports:
+      - "8080:8080"
+    networks: 
+      - frontend
+    depends_on:
+      - backend
+  
+  backend:
+    image: java-backend
+    build:
+      context: ./java
+    networks: 
+      - backend
+      - frontend
+    ports:
+      - 4200:4200
+    depends_on: 
+      - bamboo-api
+
+  bamboo-api:
+    image: node-api
+    build:
+      context: ./node
+    networks: 
+      - backend
+      - frontend
+    ports: 
+      - 8081:8081 
+
+networks:
+  backend:
+  frontend:

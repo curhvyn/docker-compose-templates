@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend
+    build: 
+      context: ./vue
+      args:
+        - VUE_APP_SERVICES_HOST=/services/m
+    ports:
+      - "8080:8080"
+    networks: 
+      - frontend
+      - backend
+    depends_on:
+      - backend
+  
+  backend:
+    image: backend
+    build:
+      context: ./node
+    networks: 
+      - backend
+    depends_on:
+      - redis
+    ports:
+      - 3000:3000
+
+  redis:
+    image: 'bitnami/redis:latest'
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - backend
+
+networks: 
+  frontend:
+  backend:
